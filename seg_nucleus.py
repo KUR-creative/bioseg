@@ -4,6 +4,18 @@ import cv2
 from matplotlib import pyplot as plt
 plt.ion()
 
+def look_and_feel(image, window_title):
+    while True:
+        cv2.imshow(window_title,image)
+        key = cv2.waitKey(1) & 0xFF
+        if (key == ord('w') or
+            key == ord('s') or  
+            key == ord('a') or  
+            key == ord('d') or  
+            key == ord('j') or  
+            key == ord('k')):
+            return chr(key)
+
 def gray2bgr(grayimg):
     return cv2.cvtColor(grayimg, cv2.COLOR_GRAY2RGB) 
 data_dir = '../data-pnu/'
