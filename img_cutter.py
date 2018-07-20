@@ -79,7 +79,8 @@ if __name__ == '__main__':
 
     for path,img in pieces:
         #print(path)
-        cv2.imwrite(path, img)
+        #cv2.imwrite(path, img)
+        cv2.imwrite(path, img[:,:,0]) # grayscale
         pass
     #-------------------------------------------------------------
     timer.elapsed_time()
