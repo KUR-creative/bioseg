@@ -12,5 +12,6 @@ pipe(utils.file_paths,
      sorted,
      list)
      
-imgs = f(img_dir)
-print('smallest img size =',imgs[0])
+sizes = f(img_dir)
+print(sizes)
+print('smallest img size =',sizes[0])
