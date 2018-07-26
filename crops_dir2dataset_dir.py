@@ -1,4 +1,4 @@
-import os, sys, random, pathlib
+import os, sys, shutil, random, pathlib
 from os.path import join as pjoin
 import cv2
 import utils
@@ -38,6 +38,9 @@ valid_label_dir = pjoin(pjoin(crops_dir,'valid'),'label')
 test_img_dir = pjoin(pjoin(crops_dir,'test'),'image')
 test_label_dir = pjoin(pjoin(crops_dir,'test'),'label')
 
+output_img_dir = pjoin(pjoin(crops_dir,'output'),'image')
+output_label_dir = pjoin(pjoin(crops_dir,'output'),'label')
+
 os.makedirs(train_img_dir, exist_ok=True)
 os.makedirs(train_label_dir, exist_ok=True)
 
@@ -46,6 +49,9 @@ os.makedirs(valid_label_dir, exist_ok=True)
 
 os.makedirs(test_img_dir, exist_ok=True)
 os.makedirs(test_label_dir, exist_ok=True)
+
+os.makedirs(output_img_dir, exist_ok=True)
+os.makedirs(output_label_dir, exist_ok=True)
 
 # Get train | valid | test
 dataset_size = len(img_mask_pairs)
@@ -71,6 +77,25 @@ def move(src_pairs, dst_img_dir, dst_label_dir):
         os.rename(mask_path, moved_mask_path)
 move(train_pairs, train_img_dir, train_label_dir)
 move(valid_pairs, valid_img_dir, valid_label_dir)
-move(test_pairs,  test_img_dir,  test_label_dir)
+
+for img_path, mask_path in test_pairs:
+    # copy!
+    moved_img_path = utils.make_dstpath(img_path, crops_dir, test_img_dir)
+    moved_mask_path = utils.make_dstpath(img_path, crops_dir, test_label_dir)
+    shutil.copyfile(img_path, moved_img_path)
+    shutil.copyfile(mask_path, moved_mask_path)
+
+for idx, (img_path, mask_path) in enumerate(test_pairs):
+    # move!
+    img_name = pathlib.Path(img_path).parts[-1]
+    inp_path = utils.replace_part_of(img_path, img_name, '%d.png' % idx)
+    ans_path = utils.replace_part_of(img_path, img_name, '%dans.png' % idx)
+    #print(pathlib.Path(img_path).parts)
+    #print(img_name, '|', inp_path, '|', ans_path)
+
+    moved_inp_path = utils.make_dstpath(inp_path, crops_dir, output_img_dir)
+    moved_ans_path = utils.make_dstpath(ans_path, crops_dir, output_label_dir)
+    os.rename(img_path, moved_inp_path)
+    os.rename(mask_path, moved_ans_path)
 
 print('All images & files are moved successfully!')
