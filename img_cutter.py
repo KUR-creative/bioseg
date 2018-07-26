@@ -83,7 +83,8 @@ if __name__ == '__main__':
     for path,img in pieces:
         #print(path)
         #cv2.imwrite(path, img)
-        cv2.imwrite(os.path.join(pieces_dir,path), img[:,:,0]) # grayscale
+        gray_img = img[:,:,2] # red mask!
+        cv2.imwrite(os.path.join(pieces_dir,path), gray_img)
         pass
     #-------------------------------------------------------------
     timer.elapsed_time()
