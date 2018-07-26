@@ -10,7 +10,7 @@ get_cleanmasks
 [synopsys]
   python get_cleanmasks.py mask_dir
 ex)
-  python img_cutter.py 256 ./masks
+  python get_cleanmasks.py ./35crops/test/label/
 ''')
 
 def binarization(img, threshold=100):
@@ -26,7 +26,8 @@ def dilation(img, kernel=kernel):
     #cv2.imshow('dilated',dilated); cv2.waitKey(0)
     return dilated
 
-mask_paths = list(utils.file_paths(sys.argv[1]))
+mask_dir = sys.argv[1]
+mask_paths = list(utils.file_paths(mask_dir))
 
 masks \
 = pipe(cmap(lambda path: cv2.imread(path,0)),
@@ -36,3 +37,5 @@ masks \
 
 for path,mask in zip(mask_paths, masks(mask_paths)):
     cv2.imwrite(path, mask)
+
+print('Now all masks in %s are clean!' % mask_dir)
