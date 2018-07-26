@@ -45,24 +45,39 @@ def gen_name_piece_pairs(img, piece_size):
     for y,x in hw2not_excess_start_yxs( (h//2,w//2), img_hw, (h,w) ):
         yield 'piece_%d_%d.png' % (y,x), img[y:y+h,x:x+w]
 
-imgno = 0
 def path_img2path_pieces(path_img, piece_size, imgs_dir, pieces_dir):
     global imgno
     path, img = path_img
-    name = os.path.splitext(path)[0]
+    ext_removed = os.path.splitext(path)[0]
 
-    old_parent = pathlib.Path(name).parts[0]
-    name = utils.make_dstpath(name, old_parent, pieces_dir)
+    parts = pathlib.Path(ext_removed).parts
+    old_parent, img_name = parts[0], parts[-1]
+    new_path = utils.make_dstpath(ext_removed, old_parent, pieces_dir)
 
     img_hw = img.shape[:2]
     h = w = piece_size
-    imgno += 1
     for r_y,r_x in sorted(itertools.product([0, 0.5], [0, 0.5])):
         org_yx = int(h*r_y),int(w*r_x)
         for y,x in hw2not_excess_start_yxs( org_yx, img_hw, (h,w) ):
             #print(y,x)
             #cv2.imshow('img',img[y:y+h, x:x+w]); cv2.waitKey(0)
-            yield '%dpiece%d_%d.png' % (imgno,y,x), img[y:y+h, x:x+w]
+            tail = '_%d_%d.png' % (y,x)
+            yield new_path+tail, img[y:y+h, x:x+w]
+
+    '''
+    parts = pathlib.Path(ext_removed).parts
+    old_parent, img_name = parts[0], parts[-1]
+    new_path = utils.make_dstpath(ext_removed, old_parent, pieces_dir)
+
+    img_hw = img.shape[:2]
+    h = w = piece_size
+    for r_y,r_x in sorted(itertools.product([0, 0.5], [0, 0.5])):
+        org_yx = int(h*r_y),int(w*r_x)
+        for y,x in hw2not_excess_start_yxs( org_yx, img_hw, (h,w) ):
+            #print(y,x)
+            #cv2.imshow('img',img[y:y+h, x:x+w]); cv2.waitKey(0)
+            yield '%s_%d_%d.png' % (img_name,y,x), img[y:y+h, x:x+w]
+    '''
 
 if __name__ == '__main__':    
     def path2path_img(path): 
@@ -87,7 +102,7 @@ if __name__ == '__main__':
         #print(path)
         #cv2.imwrite(path, img)
         gray_img = img[:,:,2] # red mask!
-        cv2.imwrite(os.path.join(pieces_dir,path), gray_img)
+        cv2.imwrite(path, gray_img)
         pass
     #-------------------------------------------------------------
     timer.elapsed_time()
