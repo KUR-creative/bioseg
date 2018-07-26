@@ -1,5 +1,6 @@
 import sys, os, cv2, tqdm, pathlib
 from fp import pipe, cmap, cfilter, flatten
+import itertools
 import utils
 
 utils.help_option('''
@@ -53,10 +54,12 @@ def path_img2path_pieces(path_img, piece_size, imgs_dir, pieces_dir):
 
     img_hw = img.shape[:2]
     h = w = piece_size
-    for y,x in hw2not_excess_start_yxs( (0,0), img_hw, (h,w) ):
-        yield name + '_%d_%d.png' % (y,x), img[y:y+h,x:x+w]
-    for y,x in hw2not_excess_start_yxs( (h//2,w//2), img_hw, (h,w) ):
-        yield name + '_%d_%d.png' % (y,x), img[y:y+h,x:x+w]
+    for r_y,r_x in sorted(itertools.product([0, 0.5], [0, 0.5])):
+        org_yx = int(h*r_y),int(w*r_x)
+        for y,x in hw2not_excess_start_yxs( org_yx, img_hw, (h,w) ):
+            #print(y,x)
+            #cv2.imshow('img',img[y:y+h, x:x+w]); cv2.waitKey(0)
+            yield 'piece_%d_%d.png' % (y,x), img[y:y+h, x:x+w]
 
 if __name__ == '__main__':    
     def path2path_img(path): 
@@ -80,7 +83,7 @@ if __name__ == '__main__':
     for path,img in pieces:
         #print(path)
         #cv2.imwrite(path, img)
-        cv2.imwrite(path, img[:,:,0]) # grayscale
+        cv2.imwrite(os.path.join(pieces_dir,path), img[:,:,0]) # grayscale
         pass
     #-------------------------------------------------------------
     timer.elapsed_time()
