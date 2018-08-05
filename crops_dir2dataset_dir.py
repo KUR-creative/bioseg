@@ -12,18 +12,20 @@ crops_dir2dataset_dir
   NOTE: the names of the masks are changed to the same as the image.
   
 [synopsys]
-  python crops_dir2dataset_dir.py crops_dir
+  python crops_dir2dataset_dir.py crops_dir label_str
 ex)
-  python crops_dir2dataset_dir.py 35crops
+  python crops_dir2dataset_dir.py 35crops _mask_
 ''')
 
 
 crops_dir = sys.argv[1]
 crops_dir = pathlib.Path(crops_dir).parts[0]
 
+label_str = sys.argv[2]
+
 all_paths = list(utils.file_paths(crops_dir))
-img_paths = sorted(filter(lambda p: '_mask_' not in p, all_paths))
-mask_paths = sorted(filter(lambda p: '_mask_' in p, all_paths))
+img_paths = sorted(filter(lambda p: label_str not in p, all_paths))
+mask_paths = sorted(filter(lambda p: label_str in p, all_paths))
 
 img_mask_pairs = list(zip(img_paths, mask_paths))
 random.shuffle(img_mask_pairs)
