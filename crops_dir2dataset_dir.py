@@ -69,6 +69,9 @@ valid_pairs = img_mask_pairs[num_train:num_train+num_valid]
 test_pairs = img_mask_pairs[num_train+num_valid:dataset_size]
 #print(len(train_pairs),len(valid_pairs),len(test_pairs))
 
+print(train_pairs[3])
+print(valid_pairs[5])
+print(test_pairs[2])
 # Move images and masks
 # *NOTE: masks are renamed with the same as the images. 
 def move(src_pairs, dst_img_dir, dst_label_dir):

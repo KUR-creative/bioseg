@@ -7,8 +7,8 @@ np.set_printoptions(threshold=np.nan, linewidth=np.nan)
 utils.help_option('''
 clean_masks
   load masks from 'mask_dir', 
-  clean masks, remove 'selected_channel'
-  and *OVERWIRTE* masks with clean masks.
+  clean masks, merge 'selected_channel' to get graysacle image,
+  and then *OVERWIRTE* masks with clean masks.
 
   it can know dataset is gray or rgb images.
   but DO NOT MIX graysacle & rgb images!

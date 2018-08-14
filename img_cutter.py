@@ -100,9 +100,9 @@ if __name__ == '__main__':
 
     for path,img in pieces:
         #print(path)
+        #print(path)
         #cv2.imwrite(path, img)
-        gray_img = img[:,:,2] # red mask!
-        cv2.imwrite(path, gray_img)
+        cv2.imwrite(path, img)
         pass
     #-------------------------------------------------------------
     timer.elapsed_time()
